@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A cute Valentine's Day page to ask someone to be your Valentine!">
   <meta name="theme-color" content="#ffd0e5">
-  <title>Valentine's Day</title>
+  <title>Will you be my Date?</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <style>
@@ -31,30 +31,35 @@
     }
   </style>
   <!-- Preload images so transitions feel instant -->
-  <link rel="preload" as="image" href="./images/image1.gif">
-  <link rel="preload" as="image" href="./images/image2.gif">
-  <link rel="preload" as="image" href="./images/image3.gif">
-  <link rel="preload" as="image" href="./images/image4.gif">
-  <link rel="preload" as="image" href="./images/image5.gif">
-  <link rel="preload" as="image" href="./images/image6.gif">
-  <link rel="preload" as="image" href="./images/image7.gif">
+  <link rel="preload" as="image" href="./Yes/Main start.gif">
+  <link rel="preload" as="image" href="./Yes/woohooo.gif">
+  <link rel="preload" as="image" href="./Yes/Lets go jumping.gif">
+  <link rel="preload" as="image" href="./Yes/Good Choice (food).gif">
+  <link rel="preload" as="image" href="./Yes/funny and best.gif">
+  <link rel="preload" as="image" href="./Yes/end.gif">
+  <link rel="preload" as="image" href="./No/1 Are u sure.gif">
+  <link rel="preload" as="image" href="./No/2 please.gif">
+  <link rel="preload" as="image" href="./No/3 Don't do this.gif">
+  <link rel="preload" as="image" href="./No/4 breaking heart.gif">
+  <link rel="preload" as="image" href="./No/5 I'm gone cry.gif">
+  <link rel="preload" as="image" href="./No/6 bye.gif">
 </head>
 <body class="gradient-background">
   <main class="flex items-center justify-center h-screen">
     <section class="flex flex-col items-center p-4">
       <img
         id="imageDisplay"
-        src="./images/image1.gif"
-        alt="Cute kitten with flowers"
+        src="./Yes/Main start.gif"
+        alt="Main start image"
         class="rounded-md h-[300px] object-cover"
       />
       <h1 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">
-        Will you be my Valentine?
+        Anisha, will you go on a date with me? 💕
       </h1>
       <div id="responseButtons" class="flex gap-4 pt-5 items-center">
         <button
           id="yesButton"
-          class="bounce inline-flex items-center justify-center whitespace-nowrap rounded-md text-xl font-medium cursor-pointer px-4 py-2 bg-green-500 text-white transition-all duration-300 ease-in-out hover:bg-green-400 min-h-12 min-w-[75px]"
+          class="bounce inline-flex items-center justify-center rounded-md text-xl font-medium cursor-pointer px-4 py-2 bg-green-500 text-white transition-all duration-300 ease-in-out hover:bg-green-400 min-h-12 min-w-[75px]"
         >
           Yes
         </button>
@@ -80,16 +85,23 @@
       // Configuration
       const GROWTH_PER_CLICK = 35;
       const FONT_GROWTH_PER_CLICK = 25;
-      const MAX_NO_CLICKS = 5;
+      const MAX_NO_CLICKS = 6;
 
-      const IMAGE_PATHS = [
-        './images/image1.gif',
-        './images/image2.gif',
-        './images/image3.gif',
-        './images/image4.gif',
-        './images/image5.gif',
-        './images/image6.gif',
-        './images/image7.gif',
+      const NO_IMAGE_PATHS = [
+        './No/1 Are u sure.gif',
+        './No/2 please.gif',
+        './No/3 Don\'t do this.gif',
+        './No/4 breaking heart.gif',
+        './No/5 I\'m gone cry.gif',
+        './No/6 bye.gif',
+      ];
+
+      const YES_IMAGE_PATHS = [
+        './Yes/woohooo.gif',
+        './Yes/Lets go jumping.gif',
+        './Yes/Good Choice (food).gif',
+        './Yes/funny and best.gif',
+        './Yes/end.gif',
       ];
 
       const NO_BUTTON_MESSAGES = [
@@ -101,21 +113,23 @@
         "I'm gonna cry...",
       ];
 
-      const ALT_TEXTS = [
-        'Cute kitten with flowers',
-        'Sad kitten looking up',
-        'Kitten begging',
-        'Heartbroken kitten',
-        'Crying kitten',
-        'Devastated kitten',
-        'Happy kitten celebrating',
+      const YES_BUTTON_MESSAGES = [
+        'Yes',
+        'Woohoo!',
+        'Lets go!!',
+        'Good choice!!',
+        'You\'re the best and funniest person',
       ];
 
       // State
       let noClickCount = 0;
-      let buttonHeight = 48;
-      let buttonWidth = 80;
-      let fontSize = 20;
+      let yesClickCount = 0;
+      let noButtonHeight = 48;
+      let noButtonWidth = 80;
+      let noFontSize = 20;
+      let yesButtonHeight = 48;
+      let yesButtonWidth = 80;
+      let yesFontSize = 20;
 
       noButton.addEventListener('click', () => {
         if (noClickCount >= MAX_NO_CLICKS) return;
@@ -123,27 +137,53 @@
         noClickCount++;
 
         // Update image and alt text
-        imageDisplay.src = IMAGE_PATHS[noClickCount];
-        imageDisplay.alt = ALT_TEXTS[noClickCount];
+        imageDisplay.src = NO_IMAGE_PATHS[noClickCount - 1];
+        imageDisplay.alt = 'NO response image';
 
-        // Grow the "Yes" button to make it harder to ignore
-        buttonHeight += GROWTH_PER_CLICK;
-        buttonWidth += GROWTH_PER_CLICK;
-        fontSize += FONT_GROWTH_PER_CLICK;
+        // Reset YES counter and grow the "Yes" button box only (not text)
+        yesClickCount = 0;
+        yesButtonHeight += GROWTH_PER_CLICK;
+        yesButtonWidth += GROWTH_PER_CLICK;
 
-        yesButton.style.height = `${buttonHeight}px`;
-        yesButton.style.width = `${buttonWidth}px`;
-        yesButton.style.fontSize = `${fontSize}px`;
+        yesButton.style.height = `${yesButtonHeight}px`;
+        yesButton.style.width = `${yesButtonWidth}px`;
 
         // Update "No" button text with increasingly desperate messages
         noButton.textContent = NO_BUTTON_MESSAGES[noClickCount];
+
+        // After 6 NO clicks, hide buttons and question, show bye image
+        if (noClickCount === MAX_NO_CLICKS) {
+          responseButtons.style.display = 'none';
+          valentineQuestion.style.display = 'none';
+        }
       });
 
       yesButton.addEventListener('click', () => {
-        imageDisplay.src = IMAGE_PATHS[IMAGE_PATHS.length - 1];
-        imageDisplay.alt = ALT_TEXTS[ALT_TEXTS.length - 1];
-        valentineQuestion.textContent = 'Yayyy!! :3';
-        responseButtons.style.display = 'none';
+        if (yesClickCount >= YES_IMAGE_PATHS.length) return;
+
+        // Update image and alt text
+        imageDisplay.src = YES_IMAGE_PATHS[yesClickCount];
+        imageDisplay.alt = 'YES celebration image';
+
+        // Reset NO counter and grow the "Yes" button box only (not text)
+        noClickCount = 0;
+        yesButtonHeight += GROWTH_PER_CLICK;
+        yesButtonWidth += GROWTH_PER_CLICK;
+
+        yesButton.style.height = `${yesButtonHeight}px`;
+        yesButton.style.width = `${yesButtonWidth}px`;
+
+        // Update "Yes" button text with happy messages
+        yesClickCount++;
+        if (yesClickCount < YES_BUTTON_MESSAGES.length) {
+          yesButton.textContent = YES_BUTTON_MESSAGES[yesClickCount];
+        }
+
+        // After last YES click, hide buttons and question
+        if (yesClickCount >= YES_IMAGE_PATHS.length) {
+          responseButtons.style.display = 'none';
+          valentineQuestion.style.display = 'none';
+        }
 
         // Heart-shaped confetti for a valentine theme
         const heart = confetti.shapeFromPath({
